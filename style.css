@@ -1,0 +1,487 @@
+@font-face {
+    font-family: "icomoon";
+    src: url("https://raw.githubusercontent.com/abxlfazl/music-player-widget/main/src/assets/icomoon/fonts/icomoon.eot?u8ckod");
+    src: url("https://raw.githubusercontent.com/abxlfazl/music-player-widget/main/src/assets/icomoon/fonts/icomoon.eot?u8ckod#iefix") format("embedded-opentype"),
+        url("https://raw.githubusercontent.com/abxlfazl/music-player-widget/main/src/assets/icomoon/fonts/icomoon.ttf?u8ckod") format("truetype"),
+        url("https://raw.githubusercontent.com/abxlfazl/music-player-widget/main/src/assets/icomoon/fonts/icomoon.woff?u8ckod") format("woff"),
+        url("https://raw.githubusercontent.com/abxlfazl/music-player-widget/main/src/assets/icomoon/fonts/icomoon.svg?u8ckod#icomoon") format("svg");
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: "icomoon" !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-back:before {
+    content: "\e900";
+    color: #827d7b;
+}
+
+.icon-next:before {
+    content: "\e901";
+    color: #827d7b;
+}
+
+.icon-pause:before {
+    content: "\e902";
+    color: #fff;
+}
+
+.icon-play:before {
+    content: "\e903";
+    color: #fff;
+}
+
+.icon-playlist:before {
+    content: "\e904";
+    color: #fff;
+}
+
+@font-face {
+    font-family: Avenir;
+    src: url(https://raw.githubusercontent.com/abxlfazl/music-player-widget/main/src/assets/font/AvenirNextRoundedProMedium.TTF);
+}
+
+html {
+    box-sizing: border-box;
+
+    --duration: 1s;
+    --ease-slider: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-timeline: cubic-bezier(0.71, 0.21, 0.3, 0.95);
+}
+
+html *,
+html *::before,
+html *::after {
+    box-sizing: inherit;
+    scrollbar-width: none;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(var(--vH) * 100);
+    font-family: Avenir, sans-serif;
+    background-color: var(--body-bg, #fff);
+    -webkit-tap-highlight-color: transparent;
+    transition: var(--duration) background-color var(--ease-slider);
+}
+
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+/* PUBLIC CLASSES */
+
+.img {
+    width: 100%;
+    flex-shrink: 0;
+    display: block;
+    object-fit: cover;
+}
+
+.list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.text_trsf-cap {
+    text-transform: capitalize;
+}
+
+.button {
+    all: unset;
+    cursor: pointer;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-row {
+    display: flex;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+._align_center {
+    align-items: center;
+}
+
+._align_start {
+    align-items: flex-start;
+}
+
+._align_end {
+    align-items: flex-end;
+}
+
+._justify_center {
+    justify-content: center;
+}
+
+._justify_start {
+    justify-content: flex-start;
+}
+
+._justify_end {
+    justify-content: flex-end;
+}
+
+._justify_space-btwn {
+    justify-content: space-between;
+}
+
+.text_overflow {
+    width: 66%;
+    overflow: hidden;
+    white-space: nowrap;
+    display: inline-block;
+    text-overflow: ellipsis;
+}
+
+.loading {
+    gap: 0 0.5rem;
+    font-size: 5rem;
+    font-weight: bold;
+}
+
+/* PUBLIC CLASSES */
+
+.music-player {
+    --color-white: #fff;
+    --color-gray: #e5e7ea;
+    --color-blue: #78adfe;
+    --color-blue-dark: #5781bd;
+
+    --box-shadow: 0 2px 6px 1px #0000001f;
+
+    --color-text-1: #000;
+    --color-text-2: #0000006b;
+
+    --cover-size: 3.8125em;
+    --border-radius: 1.625em;
+
+    --music-player-height: 24.375em;
+    --offset-cover: 1.60125em;
+
+    width: 20.9375em;
+    overflow: hidden;
+    user-select: none;
+    color: var(--color-text-1);
+    height: var(--music-player-height);
+    border-radius: var(--border-radius);
+    background-color: var(--color-white);
+}
+
+.slider {
+    --shadow-opacity: 1;
+
+    z-index: 0;
+    flex-shrink: 0;
+    height: 7.125em;
+    position: relative;
+    border-radius: inherit;
+    transition: var(--duration) height var(--ease-timeline);
+}
+
+.slider.resize {
+    --shadow-opacity: 0;
+
+    height: var(--music-player-height);
+}
+
+.slider::after {
+    top: 0;
+    left: 0;
+    right: 0;
+    content: "";
+    width: 100%;
+    z-index: -1;
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+    border-radius: inherit;
+    box-shadow: var(--box-shadow);
+    opacity: var(--shadow-opacity);
+    transition: var(--duration) opacity;
+}
+
+.slider__content {
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    border-radius: inherit;
+    width: var(--cover-size);
+    height: var(--cover-size);
+    transition: transform, width, height;
+    transition-duration: var(--duration);
+    transition-timing-function: var(--ease-timeline);
+    transform: translate3d(var(--offset-cover), var(--offset-cover), 0);
+}
+
+.slider.resize .slider__content {
+    width: 100%;
+    height: 17.8125em;
+    transform: translate3d(0, 0, 0);
+}
+
+.slider__content .button {
+    --size: 3em;
+
+    z-index: 1;
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+}
+
+.slider__content i {
+    position: absolute;
+    pointer-events: none;
+    font-size: var(--size);
+}
+
+.music-player__playlist-button {
+    top: 5.5%;
+    left: 5.5%;
+    transform: scale(0);
+    transition: calc(var(--duration) / 2) transform;
+}
+
+.slider.resize .music-player__playlist-button {
+    transform: scale(1);
+    transition: 0.35s var(--duration) transform cubic-bezier(0, 0.85, 0.11, 1.64);
+}
+
+.music-player__broadcast-guarantor .icon-pause,
+.music-player__broadcast-guarantor.click .icon-play {
+    opacity: 0;
+}
+
+.music-player__broadcast-guarantor.click .icon-pause {
+    opacity: 1;
+}
+
+.slider__imgs {
+    width: 100%;
+    height: 100%;
+    filter: brightness(75%);
+    transform: translate3d(calc(var(--index) * 100%), 0, 0);
+    transition: var(--duration) transform var(--ease-slider);
+}
+
+.slider__imgs>img {
+    pointer-events: none;
+}
+
+.slider__controls {
+    --controls-y: 145%;
+    --controls-x: 17.3%;
+    --controls-width: 68.4%;
+    --controls-resize-width: 88%;
+    /* Animation performance is better than transition */
+
+    gap: 0.375em 0;
+    flex-wrap: wrap;
+    position: absolute;
+    align-items: center;
+    padding-top: 0.375em;
+    width: var(--controls-width);
+    transform: translate3d(var(--controls-x), 0, 0);
+    animation: var(--controls-animate, "down paused") var(--duration) var(--ease-timeline) forwards;
+}
+
+@keyframes down {
+    100% {
+        width: var(--controls-resize-width);
+        transform: translate3d(0, var(--controls-y), 0);
+    }
+}
+
+@keyframes up {
+    0% {
+        width: var(--controls-resize-width);
+        transform: translate3d(0, var(--controls-y), 0);
+    }
+
+    100% {
+        width: var(--controls-width);
+        transform: translate3d(var(--controls-x), 0, 0);
+    }
+}
+
+.slider__switch-button {
+    font-size: 3em;
+    height: max-content;
+}
+
+.music-player__info {
+    width: 56.3%;
+    cursor: pointer;
+    line-height: 1.8;
+    overflow: hidden;
+    font-weight: bold;
+    padding: 0 0.0625em;
+    white-space: nowrap;
+}
+
+.music-player__info>* {
+    margin: 0 auto;
+    pointer-events: none;
+}
+
+.music-player__singer-name {
+    font-size: 1.25em;
+    width: max-content;
+}
+
+.music-player__subtitle {
+    font-size: 0.85em;
+    font-weight: bold;
+    color: var(--color-text-2);
+}
+
+.slider__controls .music-player__subtitle {
+    width: max-content;
+}
+
+.music-player__singer-name.animate,
+.music-player__subtitle.animate {
+    --subtitle-gap: 1.5625em;
+
+    display: flex;
+    gap: 0 var(--subtitle-gap);
+    animation: subtitle 12s 1.2s linear infinite;
+}
+
+@keyframes subtitle {
+
+    80%,
+    100% {
+        transform: translate3d(calc((100% + var(--subtitle-gap)) / -2), 0, 0);
+    }
+}
+
+.progress {
+    width: 90%;
+    height: 1.25em;
+    cursor: pointer;
+    transition: var(--duration) width var(--ease-timeline);
+}
+
+.slider.resize .progress {
+    width: 100%;
+}
+
+.progress__wrapper {
+    width: 100%;
+    height: 0.3125em;
+    position: relative;
+    border-radius: 1em;
+    background-color: var(--color-gray);
+}
+
+.progress__bar {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    position: absolute;
+    width: var(--width);
+    border-radius: inherit;
+    background-color: var(--color-blue);
+}
+
+.progress__bar::after {
+    --size: 0.4375em;
+
+    left: 98%;
+    content: "";
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 100%;
+    background-color: var(--color-blue-dark);
+}
+
+.music-player__playlist {
+    height: 100%;
+    /* overflow: hidden auto; */
+    overflow-y: auto;
+    max-width: 400px;
+    padding: 1.28125em 1.09375em 0 var(--offset-cover);
+}
+
+.music-player__song {
+    --gap: 0.75em;
+
+    cursor: pointer;
+    margin-bottom: var(--gap);
+    padding-bottom: var(--gap);
+    border-bottom: 1.938px solid #d8d8d859;
+}
+
+.music-player__song audio {
+    display: none;
+}
+
+.music-player__song-img {
+    width: var(--cover-size);
+    height: var(--cover-size);
+    border-radius: var(--border-radius);
+}
+
+.music-player__playlist-info {
+    width: 100%;
+    overflow: hidden;
+    line-height: 1.3;
+    font-size: 1.06875em;
+    margin-left: 0.7875em;
+}
+
+.music-player__song-duration {
+    font-weight: bold;
+    font-size: 0.7875em;
+    color: var(--color-text-2);
+}
+
+@media screen and (min-width: 1366px) {
+    .music-player {
+        font-size: 1.17132vw;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .music-player {
+        font-size: 0.8rem;
+    }
+}
+
+@media screen and (max-width: 280px) {
+    .music-player {
+        font-size: 0.6rem;
+    }
+}
